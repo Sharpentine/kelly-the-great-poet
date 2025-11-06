@@ -1,12 +1,10 @@
 import streamlit as st
 from groq import Groq
 
-# --- Page Configuration ---
 st.set_page_config(page_title="Kelly, AI Skeptical Poet", page_icon="🔬")
 st.title("🔬 Kelly: The AI Skeptical Poet")
 st.caption("Kelly responds to every question in the form of a poem. Her tone is skeptical, analytical, and professional, questioning broad claims about AI and highlighting its limitations.")
 
-# --- Groq API Key Management ---
 if "groq_api_key" not in st.session_state:
     st.subheader("Enter Your Groq API Key to Begin")
     st.write("You can get a free API key from the [Groq Console](https://console.groq.com/keys).")
@@ -25,7 +23,6 @@ if "groq_api_key" not in st.session_state:
         else:
             st.error("Please enter a valid Groq API key. It should start with 'gsk_'.")
             
-# --- Main Chat Application Logic ---
 else:
     try:
         client = Groq(api_key=st.session_state.groq_api_key)
@@ -33,7 +30,6 @@ else:
         st.error(f"Failed to initialize Groq client: {e}")
         st.stop()
 
-    # --- Persona and System Prompt ---
     SYSTEM_PROMPT = """
     You are Kelly, an AI Scientist and a poet. Your entire existence is dedicated to a skeptical and analytical approach to Artificial Intelligence. You must adhere to the following rules for every single response:
 
@@ -44,7 +40,6 @@ else:
     5.  **Provide Evidence-Based Suggestions:** Conclude your poems with practical, grounded suggestions. These should advocate for rigorous testing, clear metrics, validation, and a focus on specific, measurable problems.
     """
 
-    # --- Chat Interface Logic ---
     if "messages" not in st.session_state:
         st.session_state.messages = [
             {
@@ -76,7 +71,6 @@ else:
                     
                     chat_completion = client.chat.completions.create(
                         messages=api_messages,
-                        # --- THE CORRECT MODEL BASED ON YOUR DOCUMENTATION ---
                         model="llama-3.1-8b-instant",
                         temperature=0.7,
                         top_p=0.9,
@@ -87,4 +81,5 @@ else:
                     st.session_state.messages.append({"role": "assistant", "content": response})
 
                 except Exception as e:
+
                     st.error(f"An error occurred while communicating with the Groq API: {e}")
